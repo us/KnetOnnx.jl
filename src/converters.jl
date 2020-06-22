@@ -1,5 +1,7 @@
-KL = include("./KnetLayers/src/KnetLayers.jl")
+# KL = include("./KnetLayers/src/KnetLayers.jl")
+using KnetLayers
 onnx_utils = include("./onnx_utils.jl")
+
 
 function ONNXtoGraph(file)
     """
@@ -78,7 +80,7 @@ function converter_gemm(node, g)
     input1 = node.input[1]
 
     #the layer is a Knet Layer
-    layer = KnetOnnx.KnetLayers.Linear(input=1,output=1)
+    layer = Linear(input=1,output=1)
 
     # use g.initializer to modify KnetLayer
     w_name = node.input[2]
@@ -87,8 +89,8 @@ function converter_gemm(node, g)
     w = transpose(w)
     b = g.initializer[b_name]
 
-    w = KnetOnnx.KnetLayers.ConvertParams(w)
-    b = KnetOnnx.KnetLayers.ConvertParams(b)
+    w = ConvertParams(w)
+    b = ConvertParams(b)
 
     layer.bias = b
     layer.mult.weight = w
